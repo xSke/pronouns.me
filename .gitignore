@@ -1,0 +1,6 @@
+# Build output
+.next/
+out/
+
+# Dependencies
+node_modules/
