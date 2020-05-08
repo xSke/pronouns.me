@@ -1,5 +1,5 @@
 import { Example } from "../models/examples";
 
 export default [
-    "{They} {are} the coolest person ever. I really like {them}, and how {they} {have} so many hobbies that interest {them}. {They} {have} now lost the game, all thanks to {themselves}. It's all {their} fault, and only {theirs}."
-].map(Example.parse);
+  "Hello! Today I met a new friend! {Sub} {has} a wonderful personality. That smile of {pp} really makes me happy. I could talk to {obj} all day, although {sub} {doesn't} talk about {ref} much. I wonder if {pd} day has been wonderful. I hope so! ",
+].map((s) => Example.parse(s));

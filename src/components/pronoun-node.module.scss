@@ -1,0 +1,11 @@
+@import "../style/vars";
+
+@each $declension, $color in $declension-colors {
+  .#{$declension} {
+    color: $color;
+
+    cursor: pointer;
+    font-weight: bold;
+    text-decoration: underline;
+  }
+}

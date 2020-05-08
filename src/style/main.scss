@@ -1,13 +1,27 @@
+$site-width: 900px;
+
 // https://www.paulirish.com/2012/box-sizing-border-box-ftw/
 html {
-    box-sizing: border-box;
+  box-sizing: border-box;
 }
 
-*, *:before, *:after {
-    box-sizing: inherit;
+*,
+*::before,
+*::after {
+  box-sizing: inherit;
 }
 
-
+// Basic site layout + typography
 body {
-    font-family: 'Noto Sans', sans-serif;
+  background-color: #f7f7f7;
+  color: #333;
+  font-family: "Noto Sans", sans-serif;
+  font-size: 12pt;
+  line-height: 1.5;
+}
+
+// Fixed-width container
+.container {
+  margin: auto;
+  width: $site-width;
 }

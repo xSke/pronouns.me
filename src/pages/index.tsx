@@ -1,20 +1,19 @@
-import pronouns from "../data/pronouns";
+import PronounExample from "../components/pronoun-example";
 import examples from "../data/examples";
+import pronouns from "../data/pronouns";
 
-function HomePage() {
-    const example = examples[0];
+export default function HomePage(): JSX.Element {
+  const example = examples[0];
 
-    return (
-        <div>
-            <h3>Pronoun example:</h3>
+  return (
+    <div className="container">
+      <h3>Pronoun examples:</h3>
 
-            <ul>
-                {pronouns.map(pronoun => (
-                    <li key={pronoun.toString()}>{example.apply(pronoun)}</li>
-                ))}
-            </ul>
-        </div>
-    );
+      {pronouns.map((pronounSet) => (
+        <p key={pronounSet.id}>
+          <PronounExample pronouns={pronounSet} example={example} />
+        </p>
+      ))}
+    </div>
+  );
 }
-
-export default HomePage;
