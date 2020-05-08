@@ -7,7 +7,7 @@ export class PronounSet {
         readonly possessiveDeterminer: string,
         readonly possessivePronoun: string,
         readonly reflexive: string,
-        readonly isPlural: boolean) { }
+        readonly plural: boolean) { }
 
     get(type: PronounType): string {
         switch (type) {

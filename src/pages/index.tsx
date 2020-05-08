@@ -9,9 +9,11 @@ function HomePage() {
         <div>
             <h3>Pronoun example:</h3>
 
-            <p>
-                {example.apply(pronoun)}
-            </p>
+            <ul>
+                {pronouns.map(pronoun => (
+                    <li>{example.apply(pronoun)}</li>
+                ))}
+            </ul>
         </div>
     );
 }

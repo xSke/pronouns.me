@@ -8,18 +8,42 @@ export interface ExampleComponentText {
 
 export interface ExampleComponentPronoun {
     type: "pronoun";
-    case: PronounType,
-    uppercase: boolean
+    case: PronounType
 }
 
-export type ExampleComponent = ExampleComponentText | ExampleComponentPronoun;
+export interface ExampleComponentPluralityDependent {
+    type: "plural-dependent",
+    singular: string,
+    plural: string
+}
 
-const aliases: Record<string, PronounType> = {
-    "sub": "subject",
-    "obj": "object",
-    "pd": "possessive-determiner",
-    "pp": "possessive-pronoun",
-    "ref": "reflexive"
+export type ExampleComponentPayload = ExampleComponentText | ExampleComponentPronoun | ExampleComponentPluralityDependent;
+
+export type ExampleComponent = {
+    capitalize: boolean
+} & ExampleComponentPayload;
+
+
+const componentTags: Record<string, ExampleComponentPayload> = {
+    "sub": { type: "pronoun", case: "subject" },
+    "obj": { type: "pronoun", case: "object" },
+    "pd": { type: "pronoun", case: "possessive-determiner" },
+    "pp": { type: "pronoun", case: "possessive-pronoun" },
+    "ref": { type: "pronoun", case: "reflexive" },
+
+    // they/them pronouns are unique across all forms (so are "we" and "I")
+    "they": { type: "pronoun", case: "subject" },
+    "them": { type: "pronoun", case: "object" },
+    "their": { type: "pronoun", case: "possessive-determiner" },
+    "theirs": { type: "pronoun", case: "possessive-pronoun" },
+    "themselves": { type: "pronoun", case: "reflexive" },
+    "themself": { type: "pronoun", case: "reflexive" },
+
+    // Plural-dependent words (need to add more?)
+    "is": { type: "plural-dependent", singular: "is", plural: "are" },
+    "are": { type: "plural-dependent", singular: "is", plural: "are" },
+    "have": { type: "plural-dependent", singular: "has", plural: "have" },
+    "has": { type: "plural-dependent", singular: "has", plural: "have" },
 };
 
 export class Example {
@@ -35,21 +59,17 @@ export class Example {
             // Add leading text component
             if (match.index > 0) {
                 const textSegment = format.slice(lastPosition, match.index);
-                components.push({ type: "text", text: textSegment });
+                components.push({ type: "text", text: textSegment, capitalize: false });
             }
 
-            // Add pronoun component
-            // Fetch pronoun case from the aliases map above (case-insensitive)
-            // If the *given* tag is Uppercase, set the uppercase flag on the component
+            // Add tagged component
             const tag = match[1];
-            const pronoun = aliases[tag.toLowerCase()];
-            if (pronoun == null)
-                throw new Error(`Invalid pronoun tag '${tag}'.`);
+            const component = componentTags[tag.toLowerCase()];
+            if (!component) throw new Error(`Unknown tag '${tag}'.`);
 
             components.push({
-                type: "pronoun",
-                case: pronoun,
-                uppercase: tag[0] != tag[0].toLowerCase()
+                capitalize: tag[0] != tag[0].toLowerCase(),
+                ...component
             });
 
             lastPosition = match.index + match[0].length;
@@ -57,7 +77,7 @@ export class Example {
 
         // Add trailing text component
         if (lastPosition < format.length) {
-            components.push({ type: "text", text: format.slice(lastPosition) });
+            components.push({ type: "text", text: format.slice(lastPosition), capitalize: false });
         }
 
         return new Example(components);
@@ -71,11 +91,16 @@ export class Example {
             } else if (component.type == "pronoun") {
                 let pronounUse = pronouns.get(component.case);
 
-                if (component.uppercase)
+                if (component.capitalize)
                     pronounUse = pronounUse[0].toUpperCase() + pronounUse.slice(1).toLowerCase();
                 else pronounUse = pronounUse.toLowerCase();
 
                 output.push(pronounUse);
+            } else if (component.type == "plural-dependent") {
+                if (pronouns.plural)
+                    output.push(component.plural);
+                else
+                    output.push(component.singular);
             }
         }
         return output.join("");

@@ -1,5 +1,6 @@
 import { PronounSet } from "../models/pronouns";
 
 export default [
-    "she/her/her/hers/herself"
-].map(s => PronounSet.parse(s));
+    PronounSet.parse("she/her/her/hers/herself"),
+    PronounSet.parse("they/them/their/theirs/themselves", true),
+];
