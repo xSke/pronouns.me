@@ -1,4 +1,4 @@
-import { PronounSet, PronounType } from "./pronouns";
+import { PronounSet, PronounDeclension } from "./pronouns";
 
 
 export interface ExampleComponentText {
@@ -8,16 +8,16 @@ export interface ExampleComponentText {
 
 export interface ExampleComponentPronoun {
     type: "pronoun";
-    case: PronounType
+    declension: PronounDeclension
 }
 
-export interface ExampleComponentPluralityDependent {
-    type: "plural-dependent",
+export interface ExampleComponentNumber {
+    type: "number",
     singular: string,
     plural: string
 }
 
-export type ExampleComponentPayload = ExampleComponentText | ExampleComponentPronoun | ExampleComponentPluralityDependent;
+export type ExampleComponentPayload = ExampleComponentText | ExampleComponentPronoun | ExampleComponentNumber;
 
 export type ExampleComponent = {
     capitalize: boolean
@@ -25,25 +25,27 @@ export type ExampleComponent = {
 
 
 const componentTags: Record<string, ExampleComponentPayload> = {
-    "sub": { type: "pronoun", case: "subject" },
-    "obj": { type: "pronoun", case: "object" },
-    "pd": { type: "pronoun", case: "possessive-determiner" },
-    "pp": { type: "pronoun", case: "possessive-pronoun" },
-    "ref": { type: "pronoun", case: "reflexive" },
+    "sub": { type: "pronoun", declension: "subject" },
+    "obj": { type: "pronoun", declension: "object" },
+    "pd": { type: "pronoun", declension: "possessive-determiner" },
+    "pp": { type: "pronoun", declension: "possessive-pronoun" },
+    "ref": { type: "pronoun", declension: "reflexive" },
 
     // they/them pronouns are unique across all forms (so are "we" and "I")
-    "they": { type: "pronoun", case: "subject" },
-    "them": { type: "pronoun", case: "object" },
-    "their": { type: "pronoun", case: "possessive-determiner" },
-    "theirs": { type: "pronoun", case: "possessive-pronoun" },
-    "themselves": { type: "pronoun", case: "reflexive" },
-    "themself": { type: "pronoun", case: "reflexive" },
+    "they": { type: "pronoun", declension: "subject" },
+    "them": { type: "pronoun", declension: "object" },
+    "their": { type: "pronoun", declension: "possessive-determiner" },
+    "theirs": { type: "pronoun", declension: "possessive-pronoun" },
+    "themselves": { type: "pronoun", declension: "reflexive" },
+    "themself": { type: "pronoun", declension: "reflexive" },
 
     // Plural-dependent words (need to add more?)
-    "is": { type: "plural-dependent", singular: "is", plural: "are" },
-    "are": { type: "plural-dependent", singular: "is", plural: "are" },
-    "have": { type: "plural-dependent", singular: "has", plural: "have" },
-    "has": { type: "plural-dependent", singular: "has", plural: "have" },
+    "is": { type: "number", singular: "is", plural: "are" },
+    "are": { type: "number", singular: "is", plural: "are" },
+    "was": { type: "number", singular: "was", plural: "were" },
+    "were": { type: "number", singular: "was", plural: "were" },
+    "have": { type: "number", singular: "has", plural: "have" },
+    "has": { type: "number", singular: "has", plural: "have" },
 };
 
 export class Example {
@@ -89,18 +91,23 @@ export class Example {
             if (component.type == "text") {
                 output.push(component.text);
             } else if (component.type == "pronoun") {
-                let pronounUse = pronouns.get(component.case);
+                let pronounUse = pronouns.get(component.declension);
 
                 if (component.capitalize)
                     pronounUse = pronounUse[0].toUpperCase() + pronounUse.slice(1).toLowerCase();
+
                 else pronounUse = pronounUse.toLowerCase();
 
                 output.push(pronounUse);
-            } else if (component.type == "plural-dependent") {
-                if (pronouns.plural)
-                    output.push(component.plural);
-                else
-                    output.push(component.singular);
+            } else if (component.type == "number") {
+                switch (pronouns.number) {
+                    case "singular":
+                        output.push(component.singular);
+                        break;
+                    case "plural":
+                        output.push(component.plural);
+                        break;
+                }
             }
         }
         return output.join("");
