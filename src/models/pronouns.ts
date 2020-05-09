@@ -55,11 +55,10 @@ function createPronounFromSegments(segments: string[]) {
 function tryFindShorthandMatch(segments: string[]): PronounSet {
   let n = segments.length;
 
-  // Check for patterns like "they/singular"...
+  // Check for a number marker at the end
   let numberOverride: PronounNumber | undefined;
   if (segments[n - 1] == "singular" || segments[n - 1] == "plural") {
     numberOverride = segments[--n] as PronounNumber;
-    segments.pop();
   }
 
   // Find all the known pronouns that could potentially match this shorthand
