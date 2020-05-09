@@ -24,7 +24,7 @@ export default function PronounNode({ pronouns, declension, casing, tooltipLocat
 
   // Pronoun nodes are spans, with a class that color-codes them by declension
   return (
-    <span data-tooltip={name} className={`tooltip-${tooltipLocation ?? "top"} pronoun-${declension}`}>
+    <span data-tooltip={name} className={`pronoun-${declension}`}>
       {value}
     </span>
   );

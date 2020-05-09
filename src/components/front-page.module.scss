@@ -1,6 +1,10 @@
-$breakpoint: 800px;
+@use "../style/vars";
 
-@media all and (min-width: $breakpoint) {
+.example {
+  margin-bottom: 2rem;
+}
+
+@media all and (min-width: vars.$main-breakpoint-width) {
   .root {
     display: flex;
   }

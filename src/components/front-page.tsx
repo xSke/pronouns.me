@@ -50,11 +50,11 @@ export default function FrontPage(): JSX.Element {
     <div className={"container " + styles.root}>
       <div className={styles.example}>
         <PronounExample key={toTemplate(pronouns)} pronouns={pronouns} example={example} />
+        <PronounPresets />
       </div>
 
       <div className={styles.editor}>
         <PronounEditor pronouns={pronouns} onPronounsChange={onPronounsChange} />
-        <PronounPresets />
       </div>
     </div>
   );

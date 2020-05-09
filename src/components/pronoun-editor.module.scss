@@ -1,12 +1,11 @@
-@import "~picnic/src/themes/default/colors";
+@use "../style/vars";
 
 // Disabled for now, i guess?
-$breakpoint: 0;
 $names-min-width: 12rem;
 $names-max-width: 14rem;
 
 .editor {
-  border: 2px solid $blue;
+  border: 2px solid vars.$highlight-color-block;
   border-radius: 4px;
   padding: 1rem;
 
@@ -22,12 +21,12 @@ $names-max-width: 14rem;
     margin-bottom: 1rem;
   }
 
-  @media all and (min-width: $breakpoint) {
+  @media all and (min-width: vars.$main-breakpoint-width) {
     display: flex;
 
     .title {
       flex: 1;
-      line-height: 1.3rem;
+      line-height: 1.15rem;
       max-width: $names-max-width;
       min-width: $names-min-width;
       padding: 0 1rem 0 0;

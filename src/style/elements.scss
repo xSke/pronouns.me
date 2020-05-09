@@ -1,0 +1,39 @@
+@use "vars";
+
+// Headings
+$headings: h1 1.4em, h2 1.25em, h3 1.1em, h4 1em, h5 1em, h6 1em;
+@each $h, $size in $headings {
+  #{$h} {
+    font-size: $size;
+    font-weight: 600;
+    margin: 0;
+    padding: 0;
+  }
+}
+
+// Paragraphs and such
+p {
+  margin: 0.75rem 0 1rem;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a,
+a:visited,
+a:hover {
+  color: vars.$highlight-color-text;
+  text-decoration: underline;
+}
+
+li {
+  margin: 0 0 0 0.5rem;
+}
+
+li::before {
+  content: "\2013";
+  margin-right: 0.5rem;
+}

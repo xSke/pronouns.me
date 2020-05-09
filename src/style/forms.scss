@@ -1,0 +1,38 @@
+@use "bourbon";
+@use "vars";
+
+// Nicked from: https://github.com/franciscop/picnic/blob/master/src/plugins/select/_class.scss#L8
+$arrow-svg: "data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIyIiBoZWlnaHQ9IjMiPjxwYXRoIGQ9Im0gMCwxIDEsMiAxLC0yIHoiLz48L3N2Zz4=" !default;
+
+input,
+select {
+  background: transparent;
+  border: 2px solid #bbb;
+  border-radius: 5px;
+  height: 2.5em;
+  padding: 0.35em 0.5em;
+  width: 100%;
+}
+
+// Special treatment for select cause it does layout differently >.>
+select {
+  // I have no idea how this works but this is needed to make the inner text align...
+  @include bourbon.padding(null 0.75em null 0.25rem);
+
+  appearance: none; // Remove default down arrow
+
+  background: transparent url(#{$arrow-svg}) no-repeat scroll calc(100% - 11px) calc(50% - 1px) / 10px 13px;
+}
+
+input:focus,
+select:focus {
+  background-color: bourbon.tint(vars.$highlight-color-block, 93%);
+  border: 2px solid vars.$highlight-color-block;
+  outline: none;
+}
+
+// https://stackoverflow.com/a/19451423/13375447
+select:-moz-focusring {
+  color: transparent;
+  text-shadow: 0 0 0 vars.$text-color;
+}

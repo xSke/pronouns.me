@@ -31,7 +31,7 @@ function toDeclensionList(ps: PronounSet): string[] {
   return declensionsList.map((d) => ps.declensions[d].toLowerCase());
 }
 
-function createPronounFromSegments(segments: string[]) {
+function createPronounFromSegments(segments: string[]): PronounSet {
   const declensions: DeclensionSet = {
     subject: segments[0],
     object: segments[1],

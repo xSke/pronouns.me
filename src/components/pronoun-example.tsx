@@ -34,7 +34,6 @@ function renderComponent(pronouns: PronounSet, node: NodeInstance): JSX.Element 
 function title(ps: PronounSet): JSX.Element {
   return (
     <Fragment>
-      Pronoun example:{" "}
       {declensionsList.map((decl, idx) => (
         <Fragment key={decl}>
           <PronounNode pronouns={ps} declension={decl} casing="lower" tooltipLocation="bottom" />
@@ -48,6 +47,7 @@ function title(ps: PronounSet): JSX.Element {
 export default function PronounExample(prop: PronounExampleProps): JSX.Element {
   return (
     <div>
+      <h2>Pronoun example:</h2>
       <h1>{title(prop.pronouns)}</h1>
       <p style={{ textAlign: "justify" }}>{prop.example.nodes.map((c) => renderComponent(prop.pronouns, c))}</p>
     </div>

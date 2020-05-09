@@ -1,0 +1,14 @@
+@use "bourbon";
+
+$base-font-size: 12pt;
+$base-font-family: "Source Sans Pro", bourbon.$font-stack-system;
+$base-line-height: 1.5em;
+
+$main-breakpoint-width: 800px;
+
+$site-width: 1000px;
+
+$background-color: #fafafa;
+$text-color: #222;
+$highlight-color-text: bourbon.shade(#0074d9, 5%);
+$highlight-color-block: bourbon.tint(#0074d9, 20%);

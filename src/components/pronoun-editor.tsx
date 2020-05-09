@@ -18,11 +18,11 @@ type RowProps = {
 } & Props;
 
 const examples: Record<Declension, string> = {
-  subject: '<b class="pronoun-subject">He</b> is good.',
+  subject: '<b class="pronoun-subject">He</b> is nice.',
   object: 'I like <b class="pronoun-object">him</b>.',
   "possessive-determiner": '<b class="pronoun-possessive-determiner">Their</b> socks are grey.',
   "possessive-pronoun": 'The ball is <b class="pronoun-possessive-pronoun">hers</b>.',
-  reflexive: 'She treats <b class="pronoun-reflexive">herself</b>!',
+  reflexive: 'She did it <b class="pronoun-reflexive">herself</b>.',
 };
 
 function PronounDeclensionRow({ pronouns, declension: thisDeclension, onPronounsChange }: RowProps): JSX.Element {
@@ -89,7 +89,9 @@ function NumberRow(props: Props): JSX.Element {
 }
 
 function URLHint(props: { pronouns: PronounSet }): JSX.Element {
-  const url = `https://pronouns.me/${toTemplate(props.pronouns, { shorten: true })}`;
+  const path = toTemplate(props.pronouns, { shorten: true });
+  const url = "https://pronouns.me/" + path;
+
   return (
     <div className={styles.url}>
       <div>Share this pronoun set with the link below:</div>

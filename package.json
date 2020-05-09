@@ -3,7 +3,6 @@
   "dependencies": {
     "bourbon": "^7.0.0",
     "next": "^9.3.6",
-    "picnic": "^6.5.2",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "uuid": "^8.0.0"
@@ -69,7 +68,8 @@
     "rules": {
       "order/properties-alphabetical-order": true,
       "scss/at-import-no-partial-leading-underscore": null,
-      "selector-class-pattern": ".*"
+      "selector-class-pattern": ".*",
+      "selector-pseudo-class-no-unknown": null
     },
     "fix": true
   },
