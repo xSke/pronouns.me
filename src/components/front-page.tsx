@@ -9,7 +9,7 @@ import styles from "./front-page.module.scss";
 import PronounPresets from "./pronoun-presets";
 
 function getPronounsFromUrl(router: NextRouter): PronounSet | undefined {
-  const value = router.asPath?.slice(1); // Starts with /, remove that
+  const value = decodeURIComponent(router.asPath?.slice(1)); // Starts with /, remove that
   if (value) {
     try {
       return parsePronouns(value, true);
@@ -21,6 +21,7 @@ function getPronounsFromUrl(router: NextRouter): PronounSet | undefined {
 
 export default function FrontPage(): JSX.Element {
   const router = useRouter();
+  console.log(router.asPath);
   const defaultPronouns = router.pathname == "/" ? allPronouns[0] : undefined;
   const [pronouns, setPronouns] = useState<PronounSet | undefined>(defaultPronouns);
 
