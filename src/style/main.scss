@@ -1,27 +1,100 @@
-$site-width: 900px;
+$picnic-white: #fafafa;
+$picnic-black: #222;
 
-// https://www.paulirish.com/2012/box-sizing-border-box-ftw/
+@import "reset";
+@import "~picnic/src/picnic";
+@import "pronouns";
+
 html {
-  box-sizing: border-box;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: inherit;
-}
-
-// Basic site layout + typography
-body {
-  background-color: #f7f7f7;
-  color: #333;
-  font-family: "Noto Sans", sans-serif;
+  // Base font size
   font-size: 12pt;
-  line-height: 1.5;
 }
 
-// Fixed-width container
+body {
+  font-family: "Source Sans Pro", sans-serif;
+  font-size: inherit; // picnic sets this to 1.1em for some reason...
+  line-height: 1.8rem;
+  padding: 2rem;
+}
+
+// Padding doesn't work for some reason >.>
+body::after {
+  content: "";
+  display: block;
+  height: 2rem;
+}
+
+// Base container
 .container {
-  margin: auto;
-  width: $site-width;
+  margin: auto !important; // override .flex margin correction below
+  max-width: 1100px;
+}
+
+// Headings
+$headings: h1 1.5em, h2 1.25em, h3 1.1em, h4 1em, h5 1em, h6 1em;
+@each $h, $size in $headings {
+  #{$h} {
+    font-size: $size;
+    font-weight: 600;
+    margin: 0.25rem 0;
+    padding: 0;
+  }
+}
+
+// Paragraphs and such
+p {
+  margin: 0;
+  margin-bottom: 1rem;
+}
+
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: underline;
+}
+
+li {
+  margin: 0 0 0 0.5rem;
+}
+
+li::before {
+  content: "\2013";
+  margin-right: 0.5rem;
+}
+
+// Corrections from Picnic
+[data-tooltip]::after {
+  font-size: 0.85rem;
+}
+
+.flex {
+  margin-left: 0;
+  width: auto;
+}
+
+.flex > * {
+  padding: 0 1rem;
+
+  &:first-child {
+    padding-left: 0;
+  }
+
+  &:last-child {
+    padding-right: 0;
+  }
+}
+
+select {
+  background-position-y: 6px !important;
+  height: 2.1em;
+  line-height: 1.3;
+  padding: 0.3em 0.8em 0.3em 0.4em;
+}
+
+input {
+  padding-top: 0.4em;
 }

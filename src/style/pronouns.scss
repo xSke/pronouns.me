@@ -1,0 +1,15 @@
+$declension-colors: (
+  "subject": #cb4335,
+  "object": #f3821f,
+  "possessive-determiner": #28b463,
+  "possessive-pronoun": #2e86c1,
+  "reflexive": #884ea0,
+);
+
+// Generate a declension class for each declension color we have
+@each $declension, $color in $declension-colors {
+  .pronoun-#{$declension} {
+    color: $color;
+    font-weight: bold;
+  }
+}

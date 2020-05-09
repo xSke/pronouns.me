@@ -1,0 +1,18 @@
+$breakpoint: 800px;
+
+@media all and (min-width: $breakpoint) {
+  .root {
+    display: flex;
+  }
+
+  .example {
+    flex: 1;
+    padding-right: 1rem;
+  }
+
+  .editor {
+    flex: 1;
+    max-width: 28rem;
+    padding-left: 1rem;
+  }
+}

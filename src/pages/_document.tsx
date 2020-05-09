@@ -6,7 +6,7 @@ export default class CustomDocument extends Document {
       <Html lang="en">
         <Head>
           <link
-            href="https://fonts.googleapis.com/css2?family=Noto+Sans:wght@400;700&display=swap"
+            href="https://fonts.googleapis.com/css2?family=Source+Sans+Pro:wght@400;600&display=swap"
             rel="stylesheet"
           />
         </Head>

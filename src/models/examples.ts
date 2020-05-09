@@ -1,6 +1,8 @@
-import { v4 as uuidv4 } from "uuid";
+import * as uuid from "uuid";
 import { isCapitalized } from "../utils";
-import { PronounDeclension } from "./pronouns";
+import { Declension } from "./pronouns";
+
+export type Casing = "lower" | "upper";
 
 export interface TextNode {
   type: "text";
@@ -9,7 +11,8 @@ export interface TextNode {
 
 export interface PronounNode {
   type: "pronoun";
-  declension: PronounDeclension;
+  declension: Declension;
+  casing: Casing;
 }
 
 export interface PronounComponent {
@@ -22,84 +25,69 @@ export type NodeValue = TextNode | PronounNode | PronounComponent;
 
 export type NodeInstance = {
   id: string;
-  capitalize: boolean;
 } & NodeValue;
 
-const componentTags: Record<string, NodeValue> = {
-  sub: { type: "pronoun", declension: "subject" },
-  obj: { type: "pronoun", declension: "object" },
-  pd: { type: "pronoun", declension: "possessive-determiner" },
-  pp: { type: "pronoun", declension: "possessive-pronoun" },
-  ref: { type: "pronoun", declension: "reflexive" },
+const declensionNames: Partial<Record<string, Declension>> = {
+  // The basic names
+  subject: "subject",
+  object: "object",
+  "possessive-determiner": "possessive-determiner",
+  "possessive-pronoun": "possessive-pronoun",
+  reflexive: "reflexive",
 
-  // they/them pronouns are unique across all forms (so are "we" and "I")
-  they: { type: "pronoun", declension: "subject" },
-  them: { type: "pronoun", declension: "object" },
-  their: { type: "pronoun", declension: "possessive-determiner" },
-  theirs: { type: "pronoun", declension: "possessive-pronoun" },
-  themselves: { type: "pronoun", declension: "reflexive" },
-  themself: { type: "pronoun", declension: "reflexive" },
+  // Shortened
+  s: "subject",
+  o: "object",
+  pd: "possessive-determiner",
+  pp: "possessive-pronoun",
+  r: "reflexive",
 
-  // Plural-dependent words (need to add more?)
-  is: { type: "number", singular: "is", plural: "are" },
-  are: { type: "number", singular: "is", plural: "are" },
-  was: { type: "number", singular: "was", plural: "were" },
-  were: { type: "number", singular: "was", plural: "were" },
-  have: { type: "number", singular: "has", plural: "have" },
-  has: { type: "number", singular: "has", plural: "have" },
-  "doesn't": { type: "number", singular: "doesn't", plural: "don't" },
+  // By example (they/them has unique values for all types)
+  they: "subject",
+  them: "object",
+  their: "possessive-determiner",
+  theirs: "possessive-pronoun",
+  themself: "reflexive", // Both are valid
+  themselves: "reflexive",
 };
 
-export class Example {
-  public id: string;
+export interface Example {
+  id: string;
+  nodes: Array<NodeInstance>;
+}
 
-  constructor(readonly nodes: NodeInstance[]) {
-    this.id = uuidv4();
-  }
+export function parse(format: string): Example {
+  const nodes: NodeInstance[] = [];
+  for (const word of format.split(" ")) {
+    const pronounTagMatch = /{(\w+)}/.exec(word); // ex: {subject}
+    const numberTagMatch = /\[([\w\-']+)[/\|]([\w\-']+)\]/.exec(word); // eg: [has|have]
+    if (pronounTagMatch) {
+      // This is a {pronoun} tag
+      const inner = pronounTagMatch[1];
 
-  static parse(format: string): Example {
-    // format: {Sub} is very {obj}, etc etc.
-    const regex = /{([\w']+)}/g; // search for {tags}
-
-    const nodes: NodeInstance[] = [];
-    let match,
-      lastPosition = 0;
-    while ((match = regex.exec(format)) !== null) {
-      // Add leading text ndoe
-      if (match.index > 0) {
-        const textSegment = format.slice(lastPosition, match.index);
-        nodes.push({
-          id: uuidv4(),
-          type: "text",
-          text: textSegment,
-          capitalize: false,
-        });
+      // Match tag case-insensitively
+      // *then* extract intended casing from what was actually given ({subject} = lower, {Subject} = upper, etc)
+      const declension = declensionNames[inner.toLowerCase()];
+      const casing = isCapitalized(inner) ? "upper" : "lower";
+      if (declension === undefined) throw new Error(`Unknown pronoun declension '${inner}'.`);
+      nodes.push({ id: uuid.v4(), type: "pronoun", declension, casing });
+    } else if (numberTagMatch) {
+      // This is a [singular|plural] tag
+      const singular = numberTagMatch[1];
+      const plural = numberTagMatch[2];
+      nodes.push({ id: uuid.v4(), type: "number", singular, plural });
+    } else {
+      // This is a plain word
+      const lastNode = nodes[nodes.length - 1];
+      if (lastNode !== undefined && lastNode.type == "text") {
+        // Last node was also a text node, we just append this word to that
+        lastNode.text += " " + word;
+      } else {
+        // Add a new text node
+        nodes.push({ id: uuid.v4(), type: "text", text: word });
       }
-
-      // Add node by tag
-      const tag = match[1];
-      const component = componentTags[tag.toLowerCase()];
-      if (!component) throw new Error(`Unknown tag '${tag}'.`);
-
-      nodes.push({
-        id: uuidv4(),
-        capitalize: isCapitalized(tag),
-        ...component,
-      });
-
-      lastPosition = match.index + match[0].length;
     }
-
-    // Add trailing text node
-    if (lastPosition < format.length) {
-      nodes.push({
-        id: uuidv4(),
-        type: "text",
-        text: format.slice(lastPosition),
-        capitalize: false,
-      });
-    }
-
-    return new Example(nodes);
   }
+
+  return { id: uuid.v4(), nodes: nodes };
 }

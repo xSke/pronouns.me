@@ -1,0 +1,74 @@
+@import "~picnic/src/themes/default/colors";
+
+// Disabled for now, i guess?
+$breakpoint: 0;
+$names-min-width: 12rem;
+$names-max-width: 14rem;
+
+.editor {
+  border: 2px solid $blue;
+  border-radius: 4px;
+  padding: 1rem;
+
+  h2 {
+    margin-bottom: 1rem;
+  }
+}
+
+.row {
+  align-items: center;
+
+  &:not(:last-child) {
+    margin-bottom: 1rem;
+  }
+
+  @media all and (min-width: $breakpoint) {
+    display: flex;
+
+    .title {
+      flex: 1;
+      line-height: 1.3rem;
+      max-width: $names-max-width;
+      min-width: $names-min-width;
+      padding: 0 1rem 0 0;
+      text-align: right;
+    }
+
+    .pronoun-help {
+      display: block;
+      margin-left: 0;
+    }
+  }
+
+  input,
+  select {
+    flex: 1;
+    min-width: 8rem;
+  }
+}
+
+.title {
+  font-weight: bold;
+}
+
+.pronoun-help {
+  color: #666;
+  font-size: 0.85rem;
+  font-weight: normal;
+  margin-left: 0.25rem;
+
+  .number {
+    color: #222;
+  }
+}
+
+.url {
+  line-height: 1.3rem;
+  margin-top: 1rem;
+  text-align: center;
+
+  a {
+    display: block;
+    font-size: 0.85rem;
+  }
+}
