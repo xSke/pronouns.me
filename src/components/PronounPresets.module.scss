@@ -1,0 +1,15 @@
+@use "../style/vars";
+
+.presets {
+  font-size: 0.9rem;
+  line-height: 1.5rem;
+  margin-top: 1rem;
+
+  b {
+    color: vars.$highlight-color-text;
+  }
+
+  a {
+    color: vars.$highlight-color-text-secondary;
+  }
+}

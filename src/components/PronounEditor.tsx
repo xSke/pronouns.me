@@ -6,7 +6,7 @@ import {
   PronounSet,
   toTemplate,
 } from "../models/pronouns";
-import styles from "./pronoun-editor.module.scss";
+import styles from "./PronounEditor.module.scss";
 
 interface Props {
   pronouns: PronounSet;

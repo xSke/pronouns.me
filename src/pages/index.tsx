@@ -1,3 +1,3 @@
-import FrontPage from "../components/front-page";
+import FrontPage from "../components/FrontPage";
 
 export default FrontPage;

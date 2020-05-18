@@ -1,3 +1,5 @@
+// disclaimer: i am not good at css pls help
+
 @use "../style/vars";
 
 // Disabled for now, i guess?
@@ -51,7 +53,7 @@ $names-max-width: 14rem;
 }
 
 .pronoun-help {
-  color: #666;
+  color: vars.$text-color-secondary;
   font-size: 0.85rem;
   font-weight: normal;
   margin-left: 0.25rem;

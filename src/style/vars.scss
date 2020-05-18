@@ -6,9 +6,13 @@ $base-line-height: 1.5em;
 
 $main-breakpoint-width: 800px;
 
-$site-width: 1000px;
+$site-width: 1100px;
 
 $background-color: #fafafa;
-$text-color: #222;
-$highlight-color-text: bourbon.shade(#0074d9, 5%);
-$highlight-color-block: bourbon.tint(#0074d9, 20%);
+$text-color: #333;
+$text-color-secondary: #666;
+$highlight-color-base: #0074d9;
+$highlight-color-text: bourbon.shade($highlight-color-base, 5%);
+$highlight-color-text-secondary: bourbon.tint($highlight-color-base, 15%);
+$highlight-color-block: bourbon.tint($highlight-color-base, 30%);
+$border-color: #cbd3d7;

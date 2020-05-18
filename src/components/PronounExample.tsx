@@ -1,7 +1,7 @@
 import { Fragment } from "react";
 import { Example, NodeInstance } from "../models/examples";
 import { declensionsList, PronounSet } from "../models/pronouns";
-import PronounNode from "./pronoun-node";
+import PronounNode from "./PronounNode";
 
 export interface PronounExampleProps {
   example: Example;
@@ -49,7 +49,9 @@ export default function PronounExample(prop: PronounExampleProps): JSX.Element {
     <div>
       <h2>Pronoun example:</h2>
       <h1>{title(prop.pronouns)}</h1>
-      <p style={{ textAlign: "justify" }}>{prop.example.nodes.map((c) => renderComponent(prop.pronouns, c))}</p>
+      <blockquote style={{ textAlign: "justify" }}>
+        {prop.example.nodes.map((c) => renderComponent(prop.pronouns, c))}
+      </blockquote>
     </div>
   );
 }
