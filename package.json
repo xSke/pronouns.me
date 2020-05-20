@@ -59,6 +59,7 @@
       "prettier/react"
     ],
     "rules": {
+      "@typescript-eslint/require-await": "off",
       "react/react-in-jsx-scope": "off",
       "tsdoc/syntax": "warn"
     }
