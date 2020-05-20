@@ -1,5 +1,5 @@
-import { Casing } from "../models/examples";
-import { Declension, declensionNames, PronounSet } from "../models/pronouns";
+import { Casing } from "../examples";
+import { Declension, declensionNames, PronounSet } from "../pronouns";
 import { capitalize } from "../utils";
 
 interface PronounNodeProps {

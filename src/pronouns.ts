@@ -1,12 +1,31 @@
+/**
+ * A pronoun declension, ie. a possible "sentence position" a pronoun can be in.
+ *
+ * The possible values are as follows:
+ * - "subject": eg. **He** is nice.
+ * - "object": eg. I like **him**.
+ * - "possessive-determiner": eg. **Their** socks are grey.
+ * - "possessive-pronoun": eg. The ball is **hers**.
+ * - "reflexive": eg. She did it **herself**.
+ */
 export type Declension = "subject" | "object" | "possessive-determiner" | "possessive-pronoun" | "reflexive";
+
+/** A full set of values for every possible declension. */
 export type DeclensionSet = Record<Declension, string>;
+
+/** Whether this pronoun set should conjugate verbs as singular (he **is**) or plural (they **are**). */
 export type PronounNumber = "singular" | "plural";
+
+/** A pronoun set object, containing both a set of declensions and a number. */
 export type PronounSet = { declensions: DeclensionSet; number: PronounNumber };
+
+/** An extended pronoun set object for our "known pronouns list", including whether this set should be preferred over others when disambiguating. */
 export type KnownPronounSet = PronounSet & { preferred?: boolean };
 
+/** All the pronoun sets this app knows of. */
 export const allPronouns: Array<KnownPronounSet> = []; // Array filled in later to get around type order issues
 
-// In order
+/** An array of the available declensions (eg. keys in DeclensionSet objects), in order of listing convention. */
 export const declensionsList: Array<Declension> = [
   "subject",
   "object",
@@ -15,6 +34,7 @@ export const declensionsList: Array<Declension> = [
   "reflexive",
 ];
 
+/** A map from declensions to a human-readable formatted declension name (for display purposes). */
 export const declensionNames: Record<Declension, string> = {
   subject: "Subject",
   object: "Object",
@@ -27,11 +47,17 @@ function toDeclensionList(ps: PronounSet): string[] {
   return declensionsList.map((d) => ps.declensions[d].toLowerCase());
 }
 
+/**
+ *  Determines whether two pronoun sets are equal.
+ */
 export function arePronounSetsEqual(
   a: PronounSet,
   b: PronounSet,
   options?: {
+    /** Whether to ignore the pronoun sets' numbers when comparing. Default false. */
     ignoreNumber?: boolean;
+
+    /** If set, will check only this many declensions (in order of {@link declensionsList}). */
     checkOnlyFirst?: number;
   }
 ): boolean {
@@ -42,10 +68,12 @@ export function arePronounSetsEqual(
   return true;
 }
 
+/** Creates a new pronoun set object from an old one, with an optional number override. */
 function createPronounSet(set: PronounSet, numberOverride: PronounNumber | undefined): PronounSet {
   return { declensions: set.declensions, number: numberOverride ?? set.number };
 }
 
+/** Finds a single pronoun set (or none) matching a given partial declension set (eg. from an URL) and an optional number override (eg. also from URL). */
 function matchPronounSet(
   declensions: Partial<DeclensionSet>,
   options: { numberOverride?: PronounNumber } = {}
@@ -82,6 +110,11 @@ function matchPronounSet(
   return null;
 }
 
+/**
+ * Parse a pronoun set in slash-separated string format.
+ *
+ * @params findShorthand Whether to handle missing segments by attempting to match a known pronoun set by shorthand.
+ */
 export function parse(format: string, findShorthand?: boolean): PronounSet {
   // Input format: sub/obj/posd/posp/ref[/number]
   // eg. they/them/their/theirs/themselves/plural
@@ -117,6 +150,7 @@ export function parse(format: string, findShorthand?: boolean): PronounSet {
   return { declensions: givenDeclensions as DeclensionSet, number: givenNumber ?? "singular" };
 }
 
+/** Attempts to find the shortest possible "declension path" that'll uniquely identify this pronoun set in the known pronouns list. */
 function shortestPathLength(ps: PronounSet): { length: number; needNumberTag: boolean } {
   for (let i = 1; i <= declensionsList.length; i++) {
     // Find pronoun sets that match the first i entries
@@ -145,6 +179,7 @@ function shortestPathLength(ps: PronounSet): { length: number; needNumberTag: bo
   return { length: declensionsList.length, needNumberTag: ps.number != "singular" };
 }
 
+/** Converts a given pronoun set to a slash-separated string, optionally including its number or attempting to shorten it when possible. */
 export function toTemplate(ps: PronounSet, options?: { shorten?: boolean; includeNumber?: boolean }): string {
   const { length, needNumberTag } = options?.shorten
     ? shortestPathLength(ps)

@@ -1,11 +1,4 @@
-import {
-  Declension,
-  declensionNames,
-  declensionsList,
-  PronounNumber,
-  PronounSet,
-  toTemplate,
-} from "../models/pronouns";
+import { Declension, declensionNames, declensionsList, PronounNumber, PronounSet, toTemplate } from "../pronouns";
 import styles from "./PronounEditor.module.scss";
 
 interface Props {

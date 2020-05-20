@@ -1,6 +1,6 @@
 import { Fragment } from "react";
-import { Example, NodeInstance } from "../models/examples";
-import { declensionsList, PronounSet } from "../models/pronouns";
+import { Example, NodeInstance } from "../examples";
+import { declensionsList, PronounSet } from "../pronouns";
 import PronounNode from "./PronounNode";
 
 export interface PronounExampleProps {

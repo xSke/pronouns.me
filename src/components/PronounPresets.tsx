@@ -1,6 +1,6 @@
 import Link from "next/link";
 import { useState } from "react";
-import { allPronouns, toTemplate } from "../models/pronouns";
+import { allPronouns, toTemplate } from "../pronouns";
 import styles from "./PronounPresets.module.scss";
 
 // Just he/she/they for now

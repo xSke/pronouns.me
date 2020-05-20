@@ -1,7 +1,7 @@
 import { NextRouter, useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-import examples from "../data/examples";
-import { allPronouns, arePronounSetsEqual, parse as parsePronouns, PronounSet, toTemplate } from "../models/pronouns";
+import { examples } from "../examples";
+import { allPronouns, arePronounSetsEqual, parse as parsePronouns, PronounSet, toTemplate } from "../pronouns";
 import styles from "./FrontPage.module.scss";
 import PronounEditor from "./PronounEditor";
 import PronounExample from "./PronounExample";
