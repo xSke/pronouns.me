@@ -1,7 +1,7 @@
 import { NextRouter, useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import { examples } from "../examples";
-import { allPronouns, arePronounSetsEqual, parse as parsePronouns, PronounSet, toTemplate } from "../pronouns";
+import { allPronouns, PronounSet } from "../pronouns";
 import styles from "./FrontPage.module.scss";
 import PronounEditor from "./PronounEditor";
 import PronounExample from "./PronounExample";
@@ -11,23 +11,14 @@ function getPronounsFromUrl(router: NextRouter): PronounSet | undefined {
   const value = decodeURIComponent(router.asPath?.slice(1)); // Starts with /, remove that
   if (value) {
     try {
-      return parsePronouns(value, true);
+      return PronounSet.fromUrl(value) ?? undefined;
     } catch (e) {}
   }
 
   return undefined;
 }
 
-const placeholderPronouns: PronounSet = {
-  declensions: {
-    subject: "...",
-    object: "...",
-    "possessive-pronoun": "...",
-    "possessive-determiner": "...",
-    reflexive: "...",
-  },
-  number: "singular",
-};
+const placeholderPronouns = PronounSet.from("...", "...", "...", "...", "...");
 
 export default function FrontPage(): JSX.Element {
   const router = useRouter();
@@ -36,15 +27,17 @@ export default function FrontPage(): JSX.Element {
   const defaultPronouns = router.pathname == "/" ? allPronouns[0] : undefined;
   const [pronouns, setPronouns] = useState<PronounSet | undefined>(defaultPronouns);
 
-  const pronounsFromUrl = getPronounsFromUrl(router);
   // If the state is empty and the URL has pronoun values, update the state
+  const pronounsFromUrl = getPronounsFromUrl(router);
   if (pronouns === undefined && pronounsFromUrl !== undefined) setPronouns(pronounsFromUrl);
 
-  function onPronounsChange(ps: PronounSet): void {
-    // Update the URL to correspond with the new pronoun sets
-    // This will in turn hit the useEffect block below, which updates state and then rerenders page
-    const path = toTemplate(ps, { shorten: true });
-    router.push("/[...pronouns]", "/" + path, { shallow: true });
+  function onPronounsChange(newSet: PronounSet): void {
+    // Directly set the state to avoid URL handler round-tripping
+    setPronouns(newSet);
+
+    // Then update the URL (if valid, otherwise just ignore)
+    const newUrl = newSet.toUrl();
+    if (newUrl) router.push("/[...pronouns]", newUrl, { shallow: true });
   }
 
   // Callback runs on init and when the URL changes through the router dependency
@@ -54,7 +47,7 @@ export default function FrontPage(): JSX.Element {
 
     // Ensure we actually have a change in pronoun sets (to prevent infinite loops)
     const newPronouns = getPronounsFromUrl(router);
-    if (newPronouns && !arePronounSetsEqual(pronouns, newPronouns)) {
+    if (newPronouns && !pronouns.equals(newPronouns)) {
       setPronouns(newPronouns);
     }
   }, [router]);
@@ -68,7 +61,7 @@ export default function FrontPage(): JSX.Element {
     <Fragment>
       <div className={"container " + styles.root}>
         <div className={styles.example}>
-          <PronounExample key={toTemplate(actualPronouns)} pronouns={actualPronouns} example={example} />
+          <PronounExample key={actualPronouns.toFullPath()} pronouns={actualPronouns} example={example} />
           <PronounPresets />
         </div>
 

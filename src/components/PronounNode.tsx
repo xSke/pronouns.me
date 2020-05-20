@@ -18,7 +18,7 @@ function applyCasing(s: string, casing: Casing): string {
 }
 
 export default function PronounNode({ pronouns, declension, casing }: PronounNodeProps): JSX.Element {
-  const value = applyCasing(pronouns.declensions[declension], casing);
+  const value = applyCasing(pronouns.declensions[declension], casing).trim();
 
   // Pronoun nodes are spans, with a class that color-codes them by declension
   return <span className={`pronoun-${declension}`}>{value}</span>;

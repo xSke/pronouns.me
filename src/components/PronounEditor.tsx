@@ -1,4 +1,4 @@
-import { Declension, declensionNames, declensionsList, PronounNumber, PronounSet, toTemplate } from "../pronouns";
+import { Declension, declensionNames, declensionsList, PronounNumber, PronounSet } from "../pronouns";
 import styles from "./PronounEditor.module.scss";
 
 interface Props {
@@ -25,7 +25,7 @@ function PronounDeclensionRow({ pronouns, declension: thisDeclension, onPronouns
     const newDeclensions = { ...pronouns.declensions };
     newDeclensions[thisDeclension] = newValue;
 
-    const newSet = { ...pronouns, declensions: newDeclensions };
+    const newSet = new PronounSet(newDeclensions, pronouns.number);
     if (onPronounsChange) onPronounsChange(newSet);
   }
 
@@ -53,8 +53,7 @@ function NumberRow(props: Props): JSX.Element {
   function handleChange(e: React.ChangeEvent<HTMLSelectElement>): void {
     if (props.onPronounsChange) {
       const newNumber = e.target.value as PronounNumber;
-      const newSet = { ...props.pronouns, number: newNumber };
-      props.onPronounsChange(newSet);
+      props.onPronounsChange(props.pronouns.withNumber(newNumber));
     }
   }
 
@@ -81,9 +80,12 @@ function NumberRow(props: Props): JSX.Element {
 }
 
 function URLHint(props: { pronouns: PronounSet }): JSX.Element {
-  const path = toTemplate(props.pronouns, { shorten: true });
-  const url = "https://pronouns.me/" + path;
+  const path = props.pronouns.toUrl();
 
+  // Bail if invalid URL
+  if (!path) return <div className={styles.url}></div>;
+
+  const url = "https://pronouns.me" + path;
   return (
     <div className={styles.url}>
       <div>Share this pronoun set with the link below:</div>
