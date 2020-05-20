@@ -218,7 +218,7 @@ allPronouns.push(
   ...[
     "he/him/his/his/himself",
     "she/her/her/hers/herself",
-    "they/them/their/themselves/plural",
+    "they/them/their/theirs/themselves/plural",
     "fae/faer/faer/faers/faerself",
     "ey/em/eir/eirs/eirself",
     "xe/xem/xyr/xyrs/xemself",
