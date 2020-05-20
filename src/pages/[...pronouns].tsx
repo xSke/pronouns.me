@@ -17,7 +17,7 @@ export const getStaticPaths: GetStaticPaths = async () => {
       .map((ps) => {
         return {
           params: {
-            pronouns: ps.toUrl()?.split("/"),
+            pronouns: ps.toUrl()?.split("/").slice(1), // Skip leading /
           },
         };
       }),
