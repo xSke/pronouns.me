@@ -1,5 +1,5 @@
 import { Casing } from "../examples";
-import { Declension, declensionNames, PronounSet } from "../pronouns";
+import { Declension, PronounSet } from "../pronouns";
 import { capitalize } from "../utils";
 
 interface PronounNodeProps {
@@ -19,12 +19,7 @@ function applyCasing(s: string, casing: Casing): string {
 
 export default function PronounNode({ pronouns, declension, casing }: PronounNodeProps): JSX.Element {
   const value = applyCasing(pronouns.declensions[declension], casing);
-  const name = declensionNames[declension];
 
   // Pronoun nodes are spans, with a class that color-codes them by declension
-  return (
-    <span data-tooltip={name} className={`pronoun-${declension}`}>
-      {value}
-    </span>
-  );
+  return <span className={`pronoun-${declension}`}>{value}</span>;
 }
