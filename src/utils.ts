@@ -5,3 +5,5 @@ export function isCapitalized(input: string): boolean {
 export function capitalize(input: string): string {
   return input[0].toUpperCase() + input.slice(1).toLowerCase();
 }
+
+export const GA_TRACKING_ID = "UA-167217561-1";
