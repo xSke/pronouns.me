@@ -21,13 +21,12 @@ const examples: Record<Declension, string> = {
 function PronounDeclensionRow({ pronouns, declension: thisDeclension, onPronounsChange }: RowProps): JSX.Element {
   function handleChange(e: React.ChangeEvent<HTMLInputElement>): void {
     const newValue = e.target.value;
-    if (newValue) {
-      const newDeclensions = { ...pronouns.declensions };
-      newDeclensions[thisDeclension] = newValue;
 
-      const newSet = { ...pronouns, declensions: newDeclensions };
-      if (onPronounsChange) onPronounsChange(newSet);
-    }
+    const newDeclensions = { ...pronouns.declensions };
+    newDeclensions[thisDeclension] = newValue;
+
+    const newSet = { ...pronouns, declensions: newDeclensions };
+    if (onPronounsChange) onPronounsChange(newSet);
   }
 
   const name = declensionNames[thisDeclension];

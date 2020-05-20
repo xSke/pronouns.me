@@ -81,8 +81,8 @@ function matchPronounSet(
   // Find all pronouns from our list that match the given declensions
   const matches = allPronouns.filter((potentialMatch) => {
     for (const declension of declensionsList) {
-      // Skip matching declensions that aren't in the input set
-      if (!declensions[declension]) continue;
+      // Skip matching declensions that aren't in the input set (empty string is valid!)
+      if (declensions[declension] === undefined) continue;
       if (declensions[declension]?.toLowerCase() != potentialMatch.declensions[declension].toLowerCase()) return false;
     }
     return true;
