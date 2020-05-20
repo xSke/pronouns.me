@@ -36,7 +36,7 @@ function title(ps: PronounSet): JSX.Element {
     <Fragment>
       {declensionsList.map((decl, idx) => (
         <Fragment key={decl}>
-          <PronounNode pronouns={ps} declension={decl} casing="lower" tooltipLocation="bottom" />
+          <PronounNode pronouns={ps} declension={decl} casing="lower" />
           {idx != declensionsList.length - 1 ? "/" : ""}
         </Fragment>
       ))}

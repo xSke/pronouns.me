@@ -6,7 +6,6 @@ interface PronounNodeProps {
   pronouns: PronounSet;
   declension: Declension;
   casing: Casing;
-  tooltipLocation?: "top" | "bottom";
 }
 
 function applyCasing(s: string, casing: Casing): string {
@@ -18,7 +17,7 @@ function applyCasing(s: string, casing: Casing): string {
   }
 }
 
-export default function PronounNode({ pronouns, declension, casing, tooltipLocation }: PronounNodeProps): JSX.Element {
+export default function PronounNode({ pronouns, declension, casing }: PronounNodeProps): JSX.Element {
   const value = applyCasing(pronouns.declensions[declension], casing);
   const name = declensionNames[declension];
 

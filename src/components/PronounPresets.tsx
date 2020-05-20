@@ -18,7 +18,7 @@ export default function PronounPresets(): JSX.Element {
 
   return (
     <div className={styles.presets}>
-      <h3>Or try one of these pronoun presets:</h3>
+      <h3>Or pick one of these pronoun presets:</h3>
       <ul>
         {pronounsToDisplay.map((p) => {
           const shortenedPath = toTemplate(p, { shorten: true });
