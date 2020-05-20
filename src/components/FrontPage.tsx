@@ -18,6 +18,17 @@ function getPronounsFromUrl(router: NextRouter): PronounSet | undefined {
   return undefined;
 }
 
+const placeholderPronouns: PronounSet = {
+  declensions: {
+    subject: "...",
+    object: "...",
+    "possessive-pronoun": "...",
+    "possessive-determiner": "...",
+    reflexive: "...",
+  },
+  number: "singular",
+};
+
 export default function FrontPage(): JSX.Element {
   const router = useRouter();
 
@@ -48,21 +59,21 @@ export default function FrontPage(): JSX.Element {
     }
   }, [router]);
 
-  // If we haven't found the correct pronoun set, we're probably still waiting for the query update
-  // Just return a blank div until next rerender
-  if (pronouns === undefined) return <div></div>;
+  // If we don't have a pronoun set, we're likely prerendering a variable URL page.
+  // In this case, use a placeholder blank pronoun set so we still get *some* useful content.
+  const actualPronouns = pronouns || placeholderPronouns;
 
   const example = examples[0];
   return (
     <Fragment>
       <div className={"container " + styles.root}>
         <div className={styles.example}>
-          <PronounExample key={toTemplate(pronouns)} pronouns={pronouns} example={example} />
+          <PronounExample key={toTemplate(actualPronouns)} pronouns={actualPronouns} example={example} />
           <PronounPresets />
         </div>
 
         <div className={styles.editor}>
-          <PronounEditor pronouns={pronouns} onPronounsChange={onPronounsChange} />
+          <PronounEditor pronouns={actualPronouns} onPronounsChange={onPronounsChange} />
         </div>
       </div>
 
