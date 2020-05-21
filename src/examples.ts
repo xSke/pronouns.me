@@ -17,9 +17,6 @@ export type NodeValue = TextNode | PronounNode | NumberedWordNode;
 /** Represents a node also containing a random unique ID (eg. for React node keys) */
 export type NodeInstance = NodeValue & { id: string };
 
-/** Represents a full example object, currently just a list of nodes and an ID. */
-// export type Example = { id: string; nodes: Array<NodeInstance> };
-
 const declensionTagNames: Partial<Record<string, Declension>> = {
   // The basic names
   subject: "subject",
@@ -44,6 +41,7 @@ const declensionTagNames: Partial<Record<string, Declension>> = {
   themselves: "reflexive",
 };
 
+/** Represents a full example object, currently just a list of nodes and an ID. */
 export class Example {
   public readonly id: string;
 
