@@ -177,8 +177,9 @@ export class PronounSet {
     return declensionsList.map((d) => this.declensions[d]);
   }
 
-  toFullPath(): string {
-    return [...this.toDeclensionList(), this.number].join("/");
+  toFullPath(includeNumber = true): string {
+    if (includeNumber) return [...this.toDeclensionList(), this.number].join("/");
+    return this.toDeclensionList().join("/");
   }
 
   isUrlSafe(): boolean {
@@ -196,6 +197,7 @@ export class PronounSet {
     if (!this.isUrlSafe()) return null;
 
     const { length, needNumberTag } = shortestPathLength(this);
+    // Do some light normalization to prevent URL weirdness + encoding faults
     const path = this.toDeclensionList()
       .slice(0, length)
       .map((s) => encodeURIComponent(s.trim()))

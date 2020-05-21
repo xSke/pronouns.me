@@ -1,3 +1,4 @@
+import Head from "next/head";
 import { NextRouter, useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
 import { examples } from "../examples";
@@ -64,6 +65,10 @@ export default function FrontPage(): JSX.Element {
   const example = examples[0];
   return (
     <Fragment>
+      <Head>
+        <title>Pronoun example: {actualPronouns.toFullPath(false)}</title>
+      </Head>
+
       <div className={"container " + styles.root}>
         <div className={styles.example}>
           <PronounExample key={actualPronouns.toFullPath()} pronouns={actualPronouns} example={example} />
