@@ -34,7 +34,7 @@ function MetaTags(props: { example: Example; pronouns: PronounSet }): JSX.Elemen
       {/* OpenGraph tags (Twitter, mostly) */}
       <meta property="og:title" content={"Pronoun example: " + userPronounString} />
       <meta property="og:site_name" content="pronouns.me" />
-      <meta property="og:description" name="description" content={exampleString} />
+      <meta property="og:description" content={exampleString} />
       <meta property="og:url" content={canonicalUrl} />
       <meta property="twitter:card" content="summary" />
       <meta property="og:locale" content="en_US" />
