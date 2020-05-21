@@ -8,26 +8,21 @@ export interface PronounExampleProps {
   pronouns: PronounSet;
 }
 
-function ensureTrailingSpace(s: string): string {
-  if (s.endsWith(" ")) return s;
-  return s + " ";
-}
-
 function renderComponent(pronouns: PronounSet, node: NodeInstance): JSX.Element {
   // Render text and numbered nodes as fragments so they're inlined as text nodes in the DOM (fewer elements)
-  // Nodes need a trailing space after each other to make sure everything's properly spaced and words don't clash together
+  // Text nodes include the necessary whitespace on either side, so no need to worry about this
   switch (node.type) {
     case "text":
-      return <Fragment key={node.id}>{ensureTrailingSpace(node.text)}</Fragment>;
+      return <Fragment key={node.id}>{node.text}</Fragment>;
     case "pronoun":
       return (
         <Fragment key={node.id}>
-          <PronounNode pronouns={pronouns} declension={node.declension} casing={node.casing} />{" "}
+          <PronounNode pronouns={pronouns} declension={node.declension} casing={node.casing} />
         </Fragment>
       );
     case "number":
       const value = pronouns.number == "singular" ? node.singular : node.plural;
-      return <Fragment key={node.id}>{ensureTrailingSpace(value)}</Fragment>;
+      return <Fragment key={node.id}>{value}</Fragment>;
   }
 }
 

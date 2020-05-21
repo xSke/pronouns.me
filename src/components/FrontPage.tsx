@@ -1,7 +1,7 @@
 import Head from "next/head";
 import { NextRouter, useRouter } from "next/router";
 import { Fragment, useEffect, useState } from "react";
-import { examples } from "../examples";
+import { Example, examples } from "../examples";
 import { allPronouns, PronounSet } from "../pronouns";
 import styles from "./FrontPage.module.scss";
 import PronounEditor from "./PronounEditor";
@@ -19,7 +19,30 @@ function getPronounsFromUrl(router: NextRouter): PronounSet | undefined {
   return undefined;
 }
 
-const placeholderPronouns = PronounSet.from("...", "...", "...", "...", "...");
+function MetaTags(props: { example: Example; pronouns: PronounSet }): JSX.Element {
+  // Render various meta tags for social media embeds and a11y
+  const userPronounString = props.pronouns.toFullPath(false); // Don't include number
+  const exampleString = props.example.renderToString(props.pronouns, "markdown");
+  const canonicalUrl = "https://pronouns.me" + (props.pronouns.toUrl() ?? "/");
+
+  return (
+    <Fragment>
+      {/* Basic HTML tags */}
+      <title>Pronoun example: {userPronounString}</title>
+      <link rel="canonical" href={canonicalUrl} />
+
+      {/* OpenGraph tags (Twitter, mostly) */}
+      <meta property="og:title" content={"Pronoun example: " + userPronounString} />
+      <meta property="og:site_name" content="pronouns.me" />
+      <meta property="og:description" name="description" content={exampleString} />
+      <meta property="og:url" content={canonicalUrl} />
+      <meta property="twitter:card" content="summary" />
+      <meta property="og:locale" content="en_US" />
+
+      {/* TODO: oEmbed stuff (not entiiiiirely sure this is needed */}
+    </Fragment>
+  );
+}
 
 export default function FrontPage(): JSX.Element {
   const router = useRouter();
@@ -60,13 +83,13 @@ export default function FrontPage(): JSX.Element {
 
   // If we don't have a pronoun set, we're likely prerendering a variable URL page.
   // In this case, use a placeholder blank pronoun set so we still get *some* useful content.
-  const actualPronouns = pronouns || placeholderPronouns;
+  const actualPronouns = pronouns || PronounSet.placeholder;
 
   const example = examples[0];
   return (
     <Fragment>
       <Head>
-        <title>Pronoun example: {actualPronouns.toFullPath(false)}</title>
+        <MetaTags example={example} pronouns={actualPronouns} />
       </Head>
 
       <div className={"container " + styles.root}>

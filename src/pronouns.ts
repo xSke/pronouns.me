@@ -59,6 +59,8 @@ export function shortestPathLength(given: PronounSet): { length: number; needNum
 export class PronounSet {
   private _cachedUrl?: string;
 
+  static placeholder = PronounSet.from("...", "...", "...", "...", "...");
+
   constructor(public declensions: DeclensionSet, public number: PronounNumber) {}
 
   static from(
@@ -79,6 +81,28 @@ export class PronounSet {
       },
       number
     );
+  }
+
+  /**
+   * Parses a {@link PronounSet} from a basic string, without parsing short-hand.
+   *
+   * Returns null if input is invalid - it's assumed that the input here is a known format.
+   *
+   * @param str - A string in the format subject/object/possessive-determiner/possessive-pronoun/reflexive[/number]. If number not given, will assume singular.
+   */
+  static fromSimple(input: string): PronounSet | null {
+    const segments = input.split("/");
+    if (segments.length < 5) return null;
+    if (segments.length > 6) return null;
+
+    let number: PronounNumber = "singular";
+    if (segments.length == 6) {
+      const numberSegment = segments[5];
+      if (numberSegment === "singular" || numberSegment === "plural") number = numberSegment;
+      else return null;
+    }
+
+    return PronounSet.from(segments[0], segments[1], segments[2], segments[3], segments[4], number);
   }
 
   static match(declensions: Partial<DeclensionSet>, numberOverride: PronounNumber | undefined): PronounSet | null {
@@ -234,8 +258,5 @@ allPronouns.push(
     "kit/kit/kits/kits/kitself",
     "star/star/star/star/starself",
     "nya/nyan/nyan/nyan/nyanself",
-  ].map((p) => {
-    const segs = p.split("/");
-    return PronounSet.from(segs[0], segs[1], segs[2], segs[3], segs[4], segs[5] as PronounNumber);
-  })
+  ].map((p) => PronounSet.fromSimple(p) ?? PronounSet.placeholder)
 );

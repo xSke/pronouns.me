@@ -1,9 +1,6 @@
 import * as uuid from "uuid";
-import { Declension } from "./pronouns";
-import { isCapitalized } from "./utils";
-
-/** Whether to capitalize a given use of a pronoun. "lower" means all-lowercase, "upper" means First Letter Capitalized. */
-export type Casing = "lower" | "upper";
+import { Declension, PronounSet } from "./pronouns";
+import { applyCasing, Casing, getCasing } from "./utils";
 
 /** Represents plain text, passed through verbatim. */
 export type TextNode = { type: "text"; text: string };
@@ -21,7 +18,7 @@ export type NodeValue = TextNode | PronounNode | NumberedWordNode;
 export type NodeInstance = NodeValue & { id: string };
 
 /** Represents a full example object, currently just a list of nodes and an ID. */
-export type Example = { id: string; nodes: Array<NodeInstance> };
+// export type Example = { id: string; nodes: Array<NodeInstance> };
 
 const declensionTagNames: Partial<Record<string, Declension>> = {
   // The basic names
@@ -47,54 +44,85 @@ const declensionTagNames: Partial<Record<string, Declension>> = {
   themselves: "reflexive",
 };
 
-/**
- * Parses a pronoun example in string form into an {@link Example} object.
- *
- * - Normal text will be parsed as-is, into a {@link TextNode} object.
- * - Pronoun declensions go in `{curly braces}`, and may correspond to anything in the {@link declensionTagNames} map. The matching is case-insensitive, but if the declension given in the input starts with an uppercase letter, the resulting pronoun node will keep that casing.
- * - Number-sensitive verbs follow the format `[singular/plural]`, eg. `[has/have]` or `[does/do]`.
- */
-export function parseExample(format: string): Example {
-  const nodes: NodeInstance[] = [];
-  for (const word of format.split(" ")) {
-    const pronounTagMatch = /{(\w+)}/.exec(word); // ex: {subject}
-    const numberTagMatch = /\[([\w\-']+)[/\|]([\w\-']+)\]/.exec(word); // eg: [has/have]
-    if (pronounTagMatch) {
-      // This is a {pronoun} tag
-      const inner = pronounTagMatch[1];
+export class Example {
+  public readonly id: string;
 
-      // Match tag case-insensitively
-      // *then* extract intended casing from what was actually given ({subject} = lower, {Subject} = upper, etc)
-      const declension = declensionTagNames[inner.toLowerCase()];
-      const casing = isCapitalized(inner) ? "upper" : "lower";
-      if (declension === undefined) throw new Error(`Unknown pronoun declension '${inner}'.`);
-      nodes.push({ id: uuid.v4(), type: "pronoun", declension, casing });
-    } else if (numberTagMatch) {
-      // This is a [singular|plural] tag
-      const singular = numberTagMatch[1];
-      const plural = numberTagMatch[2];
-      nodes.push({ id: uuid.v4(), type: "number", singular, plural });
-    } else {
-      // This is a plain word
-      const lastNode = nodes[nodes.length - 1];
-      if (lastNode !== undefined && lastNode.type == "text") {
-        // Last node was also a text node, we just append this word to that
-        lastNode.text += " " + word;
-      } else {
-        // Add a new text node
-        nodes.push({ id: uuid.v4(), type: "text", text: word });
-      }
-    }
+  constructor(public nodes: Array<NodeInstance>) {
+    this.id = uuid.v4();
   }
 
-  return { id: uuid.v4(), nodes: nodes };
+  /**
+   * Parses a pronoun example in string form into an {@link Example} object.
+   *
+   * - Normal text will be parsed as-is, into a {@link TextNode} object.
+   * - Pronoun declensions go in `{curly braces}`, and may correspond to anything in the {@link declensionTagNames} map. The matching is case-insensitive, but if the declension given in the input starts with an uppercase letter, the resulting pronoun node will keep that casing.
+   * - Number-sensitive verbs follow the format `[singular/plural]`, eg. `[has/have]` or `[does/do]`.
+   */
+  static parse(input: string): Example {
+    const nodes: NodeInstance[] = [];
+
+    // Regexes specifically only match at the start
+    const textRegex = /^[^{[]/; // Matches everything until a tag start
+    const pronounRegex = /^{([\w-]+)}/; // Matches a {Pronoun} tag
+    const numberRegex = /^\[([\w']+)\/([\w']+)\]/; // Matches a [singular/plural] tag
+
+    // We repeatedly try to match a regex until there's no more text left
+    while (input) {
+      let match: RegExpExecArray | null;
+      if ((match = textRegex.exec(input))) {
+        // Text node, copy verbatim
+        nodes.push({ id: uuid.v4(), type: "text", text: match[0] });
+      } else if ((match = pronounRegex.exec(input))) {
+        // This is a {pronoun} tag
+        const inner = match[1];
+        // Match tag case-insensitively
+        // *then* extract intended casing from what was actually given ({subject} = lower, {Subject} = upper, etc)
+        const declension = declensionTagNames[inner.toLowerCase()];
+        const casing = getCasing(inner);
+        if (declension === undefined) throw new Error(`Unknown pronoun declension '${inner}'.`);
+        nodes.push({ id: uuid.v4(), type: "pronoun", declension, casing });
+      } else if ((match = numberRegex.exec(input))) {
+        // This is a [singular/plural] tag
+        nodes.push({ id: uuid.v4(), type: "number", singular: match[1], plural: match[2] });
+      } else break; // should never happen
+
+      // "advance" the input, will hit the while exit case if we're now done
+      input = input.slice(match[0].length);
+    }
+
+    return new Example(nodes);
+  }
+
+  renderToString(pronouns: PronounSet, formatting: "plain" | "markdown" | "html"): string {
+    let output = "";
+    for (const node of this.nodes) {
+      switch (node.type) {
+        case "text":
+          output += node.text;
+          break;
+        case "pronoun":
+          const pronoun = applyCasing(pronouns.get(node.declension), node.casing);
+
+          // Embolden the pronoun if we can
+          if (formatting == "markdown") output += `**${pronoun}**`;
+          else if (formatting == "html") output += `<strong>${pronoun}</strong>`;
+          else output += pronoun;
+          break;
+        case "number":
+          output += pronouns.number == "singular" ? node.singular : node.plural;
+          break;
+      }
+    }
+
+    return output;
+  }
 }
 
 /**
  * A list of examples to display on the main page.
  */
-export const examples = [
+export const examples: Array<Example> = [
   // Based on "Generic Text" from the Pronoun Dressing Room (pronouns.failedslacker.com), originally by @underneathbubbles @ tumblr.com
   // TODO: add a way to credit text authors on the site
   "Hello! Today I met a new friend, and {s} [is/are] really nice. {S} [has/have] a wonderful personality. That smile of {pp} really makes me happy. I could talk to {o} all day, although {s} [doesn't/don't] talk about {r} much. I wonder if {pd} day has been wonderful. I hope so!",
-].map(parseExample);
+].map((e) => Example.parse(e));
