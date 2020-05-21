@@ -181,16 +181,19 @@ export class PronounSet {
     return [...this.toDeclensionList(), this.number].join("/");
   }
 
-  containsInvalidDeclensions(): boolean {
-    // Invalid declensions are all-blank or all-period/slashes
-    for (const decl of Object.values(this.declensions)) if (!decl || /^[\./]+$/.exec(decl)) return true;
-    return false;
+  isUrlSafe(): boolean {
+    for (const decl of Object.values(this.declensions)) {
+      if (!decl) return false; // If empty/blank
+      if (/^[\./]+$/.exec(decl)) return false; // If only consists of .s and /s
+      if (decl.startsWith("/") || decl.endsWith("/")) return false; // These interfere with URL normalization
+    }
+    return true;
   }
 
   toUrl(): string | null {
     // Don't recalculate unnecessarily
     if (this._cachedUrl) return this._cachedUrl;
-    if (this.containsInvalidDeclensions()) return null;
+    if (!this.isUrlSafe()) return null;
 
     const { length, needNumberTag } = shortestPathLength(this);
     const path = this.toDeclensionList()

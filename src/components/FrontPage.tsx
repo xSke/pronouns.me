@@ -32,11 +32,13 @@ export default function FrontPage(): JSX.Element {
   if (pronouns === undefined && pronounsFromUrl !== undefined) setPronouns(pronounsFromUrl);
 
   function onPronounsChange(newSet: PronounSet): void {
+    console.debug("Change handler: setting new pronoun set: ", newSet.toFullPath());
     // Directly set the state to avoid URL handler round-tripping
     setPronouns(newSet);
 
     // Then update the URL (if valid, otherwise just ignore)
     const newUrl = newSet.toUrl();
+    console.debug("Change handler: setting new URL path: ", newUrl);
     if (newUrl) router.push("/[...pronouns]", newUrl, { shallow: true });
   }
 
@@ -48,6 +50,9 @@ export default function FrontPage(): JSX.Element {
     // Ensure we actually have a change in pronoun sets (to prevent infinite loops)
     const newPronouns = getPronounsFromUrl(router);
     if (newPronouns && !pronouns.equals(newPronouns)) {
+      console.debug(
+        `Effect handler: updating pronoun set from URL (${pronouns.toFullPath()} -> ${newPronouns.toFullPath()})`
+      );
       setPronouns(newPronouns);
     }
   }, [router]);
