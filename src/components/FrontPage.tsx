@@ -22,7 +22,7 @@ function getPronounsFromUrl(router: NextRouter): PronounSet | undefined {
 function MetaTags(props: { example: Example; pronouns: PronounSet }): JSX.Element {
   // Render various meta tags for social media embeds and a11y
   const userPronounString = props.pronouns.toFullPath(false); // Don't include number
-  const exampleString = props.example.renderToString(props.pronouns, "markdown");
+  const exampleString = props.example.renderToString(props.pronouns, "plain"); // TODO: can we get Markdown/HTML support anywhere?
   const canonicalUrl = "https://pronouns.me" + (props.pronouns.toUrl() ?? "/");
 
   return (
@@ -33,11 +33,11 @@ function MetaTags(props: { example: Example; pronouns: PronounSet }): JSX.Elemen
 
       {/* OpenGraph tags (Twitter, mostly) */}
       <meta property="og:title" content={"Pronoun example: " + userPronounString} />
-      <meta property="og:site_name" content="pronouns.me" />
+      <meta property="og:site_name" content="pronouns.me | Pronoun Preview Helper" />
       <meta property="og:description" content={exampleString} />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="twitter:card" content="summary" />
       <meta property="og:locale" content="en_US" />
+      <meta property="twitter:card" content="summary" />
 
       {/* TODO: oEmbed stuff (not entiiiiirely sure this is needed */}
     </Fragment>
@@ -88,9 +88,7 @@ export default function FrontPage(): JSX.Element {
   const example = examples[0];
   return (
     <Fragment>
-      <Head>
-        <MetaTags example={example} pronouns={actualPronouns} />
-      </Head>
+      <Head>{!router.isFallback && <MetaTags example={example} pronouns={actualPronouns} />}</Head>
 
       <div className={"container " + styles.root}>
         <div className={styles.example}>
