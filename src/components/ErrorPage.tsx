@@ -1,3 +1,4 @@
+import Head from "next/head";
 import PronounPresets from "./PronounPresets";
 
 export default function ErrorPage(props: { path: string }): JSX.Element {
@@ -10,14 +11,19 @@ export default function ErrorPage(props: { path: string }): JSX.Element {
 
       <p>
         This is a placeholder error page (sorry!). It means I couldn&apos;t find a pronoun matching{" "}
-        <code>{readablePath}</code>. For best results, try specifying all five pronoun declensions (or use the editor on
-        the main page). I&apos;ll make this page prettier soon, promise!
+        <code>{readablePath}</code> (from the URL). For best results, try specifying all five pronoun declensions, or
+        use the editor on the main page. I&apos;ll make this page prettier soon, promise!
       </p>
 
       <p>
         For now, try one of these pronoun presets, maybe?
         <PronounPresets />
       </p>
+
+      <Head>
+        <title>Unrecognized pronouns | pronouns.me</title>
+        <meta property="og:title" content="Unrecognized pronouns"></meta>
+      </Head>
     </div>
   );
 }

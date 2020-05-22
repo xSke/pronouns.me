@@ -14,22 +14,20 @@ function MetaTags(props: { example: Example; pronouns: PronounSet }): JSX.Elemen
   const exampleString = props.example.renderToString(props.pronouns, "plain"); // TODO: can we get Markdown/HTML support anywhere?
   const canonicalUrl = "https://pronouns.me" + (props.pronouns.toUrl() ?? "/");
 
+  // Everything below is appended to the <Head> defined in _document.tsx, some site-wide meta tags are defined there
   return (
-    <Fragment>
+    <Head>
       {/* Basic HTML tags */}
-      <title>Pronoun example: {userPronounString}</title>
+      <title>{userPronounString} | pronouns.me</title>
       <link rel="canonical" href={canonicalUrl} />
 
       {/* OpenGraph tags (Twitter, mostly) */}
-      <meta property="og:title" content={"Pronoun example: " + userPronounString} />
-      <meta property="og:site_name" content="pronouns.me | Pronoun Preview Helper" />
+      <meta property="og:title" content={userPronounString} />
       <meta property="og:description" content={exampleString} />
       <meta property="og:url" content={canonicalUrl} />
-      <meta property="og:locale" content="en_US" />
-      <meta property="twitter:card" content="summary" />
 
       {/* TODO: oEmbed stuff (not entiiiiirely sure this is needed */}
-    </Fragment>
+    </Head>
   );
 }
 
@@ -68,7 +66,8 @@ export class MainPronounsPage extends React.Component<PagePropsWithRouter, PageS
 
         return (
           <Fragment>
-            <Head>{!this.props.router.isFallback && <MetaTags example={example} pronouns={pronouns} />}</Head>
+            {!this.props.router.isFallback && <MetaTags example={example} pronouns={pronouns} />}
+
             <PronounPage
               example={example}
               pronouns={pronouns}
@@ -120,6 +119,5 @@ export default withRouter<PagePropsWithRouter>(MainPronounsPage);
 // TODO: can we pass props in directly using getStaticPaths some day? If so, do that instead :)
 export const getServerSideProps: GetServerSideProps<PageProps> = async (context) => {
   const path = "/" + (context.query.pronouns as string[]).map(encodeURIComponent).join("/");
-  console.debug(`getServerSideProps: path=${path}, url=${context.req.url}`);
   return { props: { pathFromServer: path } };
 };

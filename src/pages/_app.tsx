@@ -23,7 +23,7 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
   return (
     <Fragment>
       <Header />
-      <Component {...pageProps} />;
+      <Component {...pageProps} />
       <Footer />
     </Fragment>
   );
