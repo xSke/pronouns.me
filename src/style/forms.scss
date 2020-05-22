@@ -9,6 +9,7 @@ select {
   background: transparent;
   border: 2px solid #bbb;
   border-radius: 5px;
+  display: block;
   height: 2.5em;
   padding: 0.35em 0.5em;
   width: 100%;
@@ -16,12 +17,14 @@ select {
 
 // Special treatment for select cause it does layout differently >.>
 select {
-  // I have no idea how this works but this is needed to make the inner text align...
-  @include bourbon.padding(null 0.75em null 0.25rem);
-
   appearance: none; // Remove default down arrow
+  background: transparent url(#{$arrow-svg}) no-repeat scroll calc(100% - 11px) calc(50% - 1px) / 8px 10px;
 
-  background: transparent url(#{$arrow-svg}) no-repeat scroll calc(100% - 11px) calc(50% - 1px) / 10px 13px;
+  // Firefox does some weird internal padding stuff, throw it a negative text indent to align things again
+  // Chrome handles this fine, so we gotta specifically target Firefox: https://stackoverflow.com/a/953491
+  @-moz-document url-prefix("") {
+    text-indent: -2px;
+  }
 }
 
 input:focus,

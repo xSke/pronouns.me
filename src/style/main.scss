@@ -12,10 +12,16 @@ html {
 
 body {
   background-color: vars.$background-color;
-  color: vars.$text-color;
-  font-family: vars.$base-font-family;
   line-height: vars.$base-line-height;
   padding: 2rem;
+}
+
+// Font settings
+body,
+select,
+input {
+  color: vars.$text-color;
+  font-family: vars.$base-font-family;
 }
 
 // Base container
