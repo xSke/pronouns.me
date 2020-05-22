@@ -11,7 +11,7 @@ gtag('config', '${GA_TRACKING_ID}', {page_path: window.location.pathname});
 export default class CustomDocument extends Document {
   render(): JSX.Element {
     return (
-      <Html lang="en">
+      <Html lang="en" dir="ltr">
         <Head>
           <script async src={`https://www.googletagmanager.com/gtag/js?id=${GA_TRACKING_ID}`}></script>
           <script dangerouslySetInnerHTML={{ __html: gaScript }}></script>

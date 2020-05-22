@@ -1,6 +1,6 @@
 @use "vars";
 
-$headings: h1 1.4em, h2 1.25em, h3 1.1em, h4 1em, h5 1em, h6 1em;
+$headings: h1 1.4em, h2 1.25em, h3 1em, h4 1em, h5 1em, h6 1em;
 @each $h, $size in $headings {
   #{$h} {
     font-size: $size;
@@ -31,18 +31,40 @@ a:hover {
 }
 
 li {
-  margin: 0 0 0 0.5rem;
+  // margin: 0 0 0 0.25em;
 }
 
 li::before {
+  color: vars.$text-color-secondary;
   content: "\2013";
-  margin-right: 0.5rem;
+  margin-right: 0.5em;
 }
 
 blockquote {
   border-left: 4px solid vars.$border-color;
   margin: 1rem 0;
   padding: 0.5rem 0 0.5rem 1rem;
+}
+
+code {
+  background-color: #eee;
+  display: inline-block;
+  font-size: 0.9em;
+  padding: 0 0.25em;
+}
+
+header {
+  font-size: 1.25rem;
+  margin-bottom: 3rem;
+  text-align: center;
+
+  &::after {
+    border-bottom: 1px solid vars.$border-color;
+    content: " ";
+    display: block;
+    margin: 1rem auto 0;
+    width: 4rem;
+  }
 }
 
 footer {
@@ -59,13 +81,7 @@ footer {
     border-top: 1px solid vars.$border-color;
     content: " ";
     display: block;
-    margin: 2rem auto 0.5rem;
+    margin: 1rem auto 0.5rem;
     width: 4rem;
   }
-}
-
-.divider::after {
-  content: "\2013";
-  display: inline-block;
-  margin: 0 0.5rem;
 }

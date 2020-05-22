@@ -1,3 +1,6 @@
-import FrontPage from "../components/FrontPage";
+import MainPronounsPage from "./[...pronouns]";
 
-export default FrontPage;
+export default function Index(): JSX.Element {
+  // We're cheating. This isn't from the server at all. mwahahaha.
+  return <MainPronounsPage pathFromServer="/they" />;
+}

@@ -60,7 +60,7 @@ export class Example {
     const nodes: NodeInstance[] = [];
 
     // Regexes specifically only match at the start
-    const textRegex = /^[^{[]/; // Matches everything until a tag start
+    const textRegex = /^[^{[]+/; // Matches everything until a tag start
     const pronounRegex = /^{([\w-]+)}/; // Matches a {Pronoun} tag
     const numberRegex = /^\[([\w']+)\/([\w']+)\]/; // Matches a [singular/plural] tag
 
@@ -119,7 +119,7 @@ export class Example {
 /**
  * A list of examples to display on the main page.
  */
-export const examples: Array<Example> = [
+export const allExamples: Array<Example> = [
   // Based on "Generic Text" from the Pronoun Dressing Room (pronouns.failedslacker.com), originally by @underneathbubbles @ tumblr.com
   // TODO: add a way to credit text authors on the site
   "Hello! Today I met a new friend, and {s} [is/are] really nice. {S} [has/have] a wonderful personality. That smile of {pp} really makes me happy. I could talk to {o} all day, although {s} [doesn't/don't] talk about {r} much. I wonder if {pd} day has been wonderful. I hope so!",

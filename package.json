@@ -2,6 +2,7 @@
   "name": "pronouns.me",
   "dependencies": {
     "bourbon": "^7.0.0",
+    "debounce": "^1.2.0",
     "next": "^9.3.6",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
@@ -14,6 +15,7 @@
     "start": "next start"
   },
   "devDependencies": {
+    "@types/debounce": "^1.2.0",
     "@types/node": "^13.13.5",
     "@types/react": "^16.9.34",
     "@types/uuid": "^7.0.3",

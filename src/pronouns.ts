@@ -90,7 +90,7 @@ export class PronounSet {
    *
    * @param str - A string in the format subject/object/possessive-determiner/possessive-pronoun/reflexive[/number]. If number not given, will assume singular.
    */
-  static fromSimple(input: string): PronounSet | null {
+  static fromCanonical(input: string): PronounSet | null {
     const segments = input.split("/");
     if (segments.length < 5) return null;
     if (segments.length > 6) return null;
@@ -163,10 +163,8 @@ export class PronounSet {
     if (matchedSet !== null) return matchedSet;
 
     // If we didn't get a match, then see if we can construct it directly
-    if (segments.length < 5) throw new Error("Pronoun string must contain at least five segments.");
-    if (segments.length > 6) throw new Error("Pronoun string must contain at most six segments.");
-
     // (we know that we were given at least five segments, so givenDeclensions will always be filled out)
+    if (segments.length < 5 || segments.length > 6) return null;
     return new PronounSet(givenDeclensions as DeclensionSet, givenNumber ?? "singular");
   }
 
@@ -201,9 +199,22 @@ export class PronounSet {
     return declensionsList.map((d) => this.declensions[d]);
   }
 
-  toFullPath(includeNumber = true): string {
-    if (includeNumber) return [...this.toDeclensionList(), this.number].join("/");
-    return this.toDeclensionList().join("/");
+  toHumanReadableString({ shorten }: { shorten: boolean }): string {
+    let segments = this.toDeclensionList();
+
+    if (shorten) {
+      const { length, needNumberTag } = shortestPathLength(this);
+      segments = segments.slice(0, length);
+      if (needNumberTag) segments.push(this.number);
+    } else {
+      if (this.number == "plural") segments.push(this.number);
+    }
+
+    return segments.join("/");
+  }
+
+  toCanonical(): string {
+    return [...this.toDeclensionList(), this.number].join("/");
   }
 
   isUrlSafe(): boolean {
@@ -258,5 +269,5 @@ allPronouns.push(
     "kit/kit/kits/kits/kitself",
     "star/star/star/star/starself",
     "nya/nyan/nyan/nyan/nyanself",
-  ].map((p) => PronounSet.fromSimple(p) ?? PronounSet.placeholder)
+  ].map((p) => PronounSet.fromCanonical(p) ?? PronounSet.placeholder)
 );

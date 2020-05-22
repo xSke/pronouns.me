@@ -42,6 +42,7 @@ function PronounDeclensionRow({ pronouns, declension: thisDeclension, onPronouns
         id={thisDeclension}
         type="text"
         placeholder="pronoun goes here..."
+        maxLength={15} // Is this a reasonable value?
         value={pronouns.declensions[thisDeclension]}
         onChange={handleChange}
       ></input>

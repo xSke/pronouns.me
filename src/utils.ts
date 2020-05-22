@@ -17,4 +17,15 @@ export function applyCasing(input: string, casing: Casing): string {
       return input[0].toUpperCase() + input.slice(1).toLowerCase();
   }
 }
+
+export function ensureString(input: string | string[]): string {
+  if (input instanceof Array) return input[0];
+  return input;
+}
+
+export function ensureArray(input: string | string[]): string[] {
+  if (input instanceof Array) return input;
+  return [input];
+}
+
 export const GA_TRACKING_ID = "UA-167217561-1";

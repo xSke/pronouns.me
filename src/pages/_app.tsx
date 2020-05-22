@@ -1,6 +1,8 @@
 import { AppProps } from "next/app";
 import { Router } from "next/router";
-import { useEffect } from "react";
+import { Fragment, useEffect } from "react";
+import Footer from "../components/Footer";
+import Header from "../components/Header";
 import "../style/main.scss";
 import { GA_TRACKING_ID } from "../utils";
 
@@ -18,5 +20,11 @@ export default function MyApp({ Component, pageProps }: AppProps): JSX.Element {
     };
   }, []);
 
-  return <Component {...pageProps} />;
+  return (
+    <Fragment>
+      <Header />
+      <Component {...pageProps} />;
+      <Footer />
+    </Fragment>
+  );
 }

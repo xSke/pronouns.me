@@ -4,6 +4,10 @@
   margin-bottom: 2rem;
 }
 
+.presets {
+  margin-top: 1.5rem;
+}
+
 @media all and (min-width: vars.$main-breakpoint-width) {
   .root {
     display: flex;

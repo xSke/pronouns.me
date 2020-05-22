@@ -17,35 +17,32 @@ export default function PronounPresets(): JSX.Element {
   }
 
   return (
-    <div className={styles.presets}>
-      <h3>Or pick one of these pronoun presets:</h3>
-      <ul>
-        {pronounsToDisplay.map((p) => {
-          const { length, needNumberTag } = shortestPathLength(p);
+    <ul className={styles.presets}>
+      {pronounsToDisplay.map((p) => {
+        const { length, needNumberTag } = shortestPathLength(p);
 
-          const shortPath = p.toDeclensionList().slice(0, length).join("/");
-          const fullPath = p.toDeclensionList().join("/") + (needNumberTag ? "/" + p.number : "");
+        const shortPath = p.toDeclensionList().slice(0, length).join("/");
+        const fullPath = p.toDeclensionList().join("/") + (needNumberTag ? "/" + p.number : "");
 
-          return (
-            <li key={p.toFullPath()}>
-              <Link href="/[...pronouns]" as={p.toUrl() ?? ""}>
-                <a>
-                  <b>{shortPath}</b>
-                  {fullPath.slice(shortPath.length)}
-                </a>
-              </Link>
-            </li>
-          );
-        })}
-
-        {!expanded ? (
-          <li style={{ fontStyle: "italic" }}>
-            <a href="#" onClick={doExpand}>
-              (show more...)
-            </a>
+        return (
+          <li key={p.toCanonical()}>
+            <Link shallow href="/[...pronouns]" as={p.toUrl() ?? ""}>
+              <a>
+                <b>{shortPath}</b>
+                {fullPath.slice(shortPath.length)}
+              </a>
+            </Link>
           </li>
-        ) : null}
-      </ul>
-    </div>
+        );
+      })}
+
+      {!expanded ? (
+        <li style={{ fontStyle: "italic" }}>
+          <a href="#" onClick={doExpand}>
+            (show more...)
+          </a>
+        </li>
+      ) : null}
+    </ul>
   );
 }

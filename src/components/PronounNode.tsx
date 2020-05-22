@@ -11,5 +11,5 @@ export default function PronounNode({ pronouns, declension, casing }: PronounNod
   const value = applyCasing(pronouns.declensions[declension], casing).trim();
 
   // Pronoun nodes are spans, with a class that color-codes them by declension
-  return <span className={`pronoun-${declension}`}>{value}</span>;
+  return <span className={`pronoun-${declension}`}>{value || "..."}</span>;
 }
