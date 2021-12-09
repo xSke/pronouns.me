@@ -3,7 +3,7 @@
   "dependencies": {
     "bourbon": "^7.0.0",
     "debounce": "^1.2.0",
-    "next": "^9.3.6",
+    "next": "^11.1.3",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "uuid": "^8.0.0"
